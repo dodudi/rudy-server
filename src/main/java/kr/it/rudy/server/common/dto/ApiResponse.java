@@ -1,8 +1,10 @@
 package kr.it.rudy.server.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
     private final boolean success;
@@ -10,10 +12,14 @@ public class ApiResponse<T> {
     private final T data;
     private final String error;
 
-    public ApiResponse(T data) {
-        this.success = true;
+    private ApiResponse(boolean success, String message, T data, String error) {
+        this.success = success;
         this.data = data;
-        this.message = "success";
-        this.error = null;
+        this.message = message;
+        this.error = error;
+    }
+
+    public static <T> ApiResponse<T> ok(T data) {
+        return new ApiResponse<>(true, "success", data, null);
     }
 }

@@ -1,11 +1,12 @@
 package kr.it.rudy.server.devtools.presentation.controller;
 
+import kr.it.rudy.server.common.dto.ApiResponse;
+import kr.it.rudy.server.common.dto.JsonParserRequest;
+import kr.it.rudy.server.common.dto.JsonParserResponse;
 import kr.it.rudy.server.devtools.application.service.DevToolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,8 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DevToolController {
     private final DevToolService devToolService;
 
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
+    @PostMapping("/json-parser")
+    public ResponseEntity<ApiResponse<JsonParserResponse>> jsonParser(@RequestBody JsonParserRequest request) {
+        JsonParserResponse response = devToolService.jsonParser(request.json());
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }
