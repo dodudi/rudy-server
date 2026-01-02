@@ -1,12 +1,14 @@
 package kr.it.rudy.server.devtools.presentation.controller;
 
-import kr.it.rudy.server.common.dto.ApiResponse;
-import kr.it.rudy.server.common.dto.JsonParserRequest;
-import kr.it.rudy.server.common.dto.JsonParserResponse;
+import jakarta.validation.Valid;
+import kr.it.rudy.server.common.dto.*;
 import kr.it.rudy.server.devtools.application.service.DevToolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +19,18 @@ public class DevToolController {
     @PostMapping("/json-parser")
     public ResponseEntity<ApiResponse<JsonParserResponse>> jsonParser(@RequestBody JsonParserRequest request) {
         JsonParserResponse response = devToolService.jsonParser(request.json(), request.indent());
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/base64-encode")
+    public ResponseEntity<ApiResponse<Base64Response>> base64Encode(@Valid @RequestBody Base64Request request) {
+        Base64Response response = devToolService.encodeBase64(request.text());
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/base64-decode")
+    public ResponseEntity<ApiResponse<Base64Response>> base64Decode(@Valid @RequestBody Base64Request request) {
+        Base64Response response = devToolService.decodeBase64(request.text());
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }

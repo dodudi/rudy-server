@@ -1,11 +1,14 @@
 package kr.it.rudy.server.devtools.application.service;
 
+import kr.it.rudy.server.common.dto.Base64Response;
 import kr.it.rudy.server.common.dto.JsonParserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.util.DefaultIndenter;
 import tools.jackson.core.util.DefaultPrettyPrinter;
 import tools.jackson.databind.ObjectMapper;
+
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,33 @@ public class DevToolService {
                     false,
                     e.getMessage()
             );
+        }
+    }
+
+    public Base64Response encodeBase64(String text) {
+        try {
+            if (text == null || text.isEmpty()) {
+                return new Base64Response(null, false, "입력 텍스트가 비어있습니다.");
+            }
+            String encoded = Base64.getEncoder().encodeToString(text.getBytes());
+            return new Base64Response(encoded, true, null);
+        } catch (Exception e) {
+            return new Base64Response(null, false, e.getMessage());
+        }
+    }
+
+    public Base64Response decodeBase64(String text) {
+        try {
+            if (text == null || text.isEmpty()) {
+                return new Base64Response(null, false, "입력 텍스트가 비어있습니다.");
+            }
+            byte[] decodedBytes = Base64.getDecoder().decode(text);
+            String decoded = new String(decodedBytes);
+            return new Base64Response(decoded, true, null);
+        } catch (IllegalArgumentException e) {
+            return new Base64Response(null, false, "유효하지 않은 Base64 문자열입니다.");
+        } catch (Exception e) {
+            return new Base64Response(null, false, e.getMessage());
         }
     }
 }
