@@ -57,4 +57,14 @@ public class DevToolController {
         );
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
+
+    @PostMapping("/timestamp-convert")
+    public ResponseEntity<ApiResponse<TimestampResponse>> timestampConvert(@Valid @RequestBody TimestampRequest request) {
+        TimestampResponse response = devToolService.convertTimestamp(
+                request.input(),
+                request.conversionType(),
+                request.timezone()
+        );
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
 }
