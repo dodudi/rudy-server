@@ -3,4 +3,4 @@ server:
 
 spring:
   application:
-    name: rudy-server
+    name: rudy-devtools
