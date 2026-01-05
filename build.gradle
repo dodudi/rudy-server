@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'kr.it.rudy'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 description = 'rudy-server'
 
 java {
@@ -47,4 +47,26 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Docker buildx tasks
+tasks.register('dockerBuildx', Exec) {
+    description = 'Build and push multi-architecture Docker image'
+    group = 'docker'
+    workingDir projectDir
+    commandLine '/usr/local/bin/docker', 'buildx', 'build',
+        '--platform', 'linux/amd64,linux/arm64',
+        '-t', 'didadu/rudy-server:latest',
+        '--push',
+        '.'
+}
+
+tasks.register('push') {
+    description = 'Clean, build, and push Docker image'
+    group = 'docker'
+    dependsOn clean, build, dockerBuildx
+
+    doLast {
+        println 'Successfully built and pushed Docker image!'
+    }
 }
