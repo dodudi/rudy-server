@@ -26,11 +26,15 @@ public class TimestampProcessor {
 
     public ZonedDateTime parseDateTime(String input, ZoneId zoneId) {
         for (DateTimeFormatter formatter : formatters) {
-            if (input.contains("T") || input.contains("Z") || input.contains("+")) {
-                return ZonedDateTime.parse(input, formatter);
-            } else {
-                LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
-                return localDateTime.atZone(zoneId);
+            try {
+                if (input.contains("T") || input.contains("Z") || input.contains("+")) {
+                    return ZonedDateTime.parse(input, formatter);
+                } else {
+                    LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
+                    return localDateTime.atZone(zoneId);
+                }
+            } catch (DateTimeParseException e) {
+                // Continue to next formatter
             }
         }
 
